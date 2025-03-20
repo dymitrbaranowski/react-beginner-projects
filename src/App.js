@@ -25,13 +25,18 @@ function App() {
       });
   }, []);
 
-  const onCHangeSearchValue = (event) => {
+  const onChangeSearchValue = (event) => {
     setSearchValue(event.target.value);
   };
 
   return (
     <div className="App">
-      <Users searchValue={searchValue} items={users} isLoading={isLoading} />
+      <Users
+        onChangeSearchValue={onChangeSearchValue}
+        searchValue={searchValue}
+        items={users}
+        isLoading={isLoading}
+      />
       {/* <Success /> */}
     </div>
   );
