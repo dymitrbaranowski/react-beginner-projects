@@ -3,21 +3,19 @@ import { Block } from "./Block";
 import "./index.scss";
 
 function App() {
-  const [fromCurrency, setFromCurrency] = React.useState("rub");
-  const [toCurrency, setToCurrency] = React.useState("usd");
+  const [fromCurrency, setFromCurrency] = React.useState("RUB");
+  const [toCurrency, setToCurrency] = React.useState("USD");
   const [fromPrice, setFromPrice] = React.useState(0);
   const [toPrice, setToPrice] = React.useState(0);
 
-  const [quotes, setQuotes] = React.useState({});
+  const [rates, setRates] = React.useState({});
 
   React.useEffect(() => {
-    fetch(
-      "https://api.minfin.com.ua/nbu/84b3d96693143dfe418909790fdfbba278a2c01f/"
-    )
+    fetch("https://www.cbr-xml-daily.ru/latest.js")
       .then((res) => res.json())
       .then((data) => {
-        setQuotes(data);
-        console.log(data);
+        setRates(data.rates);
+        console.log(data.rates);
       })
       .catch((err) => {
         console.warn(err);
@@ -26,24 +24,18 @@ function App() {
   }, []);
 
   const onChangeFromPrice = (value) => {
-    if (!quotes[fromCurrency] || !quotes[toCurrency]) {
-      return;
-    }
-    const price = value / quotes[fromCurrency];
-    const result = price * Number(quotes[toCurrency]);
+    const price = Number(value) / rates[fromCurrency];
+    const result = price * Number(rates[toCurrency]);
 
-    setToPrice(isNaN(result) ? 0 : result);
-    setFromPrice(isNaN(value) ? 0 : value);
+    setToPrice(result);
+    setFromPrice(value);
   };
 
   const onChangeToPrice = (value) => {
-    if (!quotes[fromCurrency] || !quotes[toCurrency]) {
-      return;
-    }
-    const result = (quotes[fromCurrency] / quotes[toCurrency]) * value;
+    const result = (rates[fromCurrency] / rates[toCurrency]) * value;
 
-    setFromPrice(isNaN(result) ? 0 : result);
-    setToPrice(isNaN(value) ? 0 : value);
+    setFromPrice(result);
+    setToPrice(value);
   };
 
   return (
