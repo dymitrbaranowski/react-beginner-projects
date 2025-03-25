@@ -3,8 +3,8 @@ import { Block } from "./Block";
 import "./index.scss";
 
 function App() {
-  const [fromCurrency, setFromCurrency] = React.useState("RUB");
-  const [toCurrency, setToCurrency] = React.useState("USD");
+  const [fromCurrency, setFromCurrency] = React.useState("rub");
+  const [toCurrency, setToCurrency] = React.useState("usd");
   const [fromPrice, setFromPrice] = React.useState(0);
   const [toPrice, setToPrice] = React.useState(0);
 
@@ -12,12 +12,12 @@ function App() {
 
   React.useEffect(() => {
     fetch(
-      "https://api.currencylayer.com/live?access_key=389623e54cec7c8640c982719346bbcb"
+      "https://api.minfin.com.ua/nbu/84b3d96693143dfe418909790fdfbba278a2c01f/"
     )
       .then((res) => res.json())
       .then((data) => {
-        setQuotes(data.quotes);
-        console.log(data.quotes);
+        setQuotes(data.usd);
+        console.log(data);
       })
       .catch((err) => {
         console.warn(err);
@@ -27,14 +27,15 @@ function App() {
 
   const onChangeFromPrice = (value) => {
     const price = value / quotes[fromCurrency];
-    const result = price * quotes[toCurrency];
+    const result = price * Number(quotes[toCurrency]);
+
     setToPrice(result);
-    setFromPrice(value).toFixed(2);
+    setFromPrice(value);
   };
 
   const onChangeToPrice = (value) => {
-    const price = value / quotes[toCurrency];
-    const result = price * quotes[fromCurrency];
+    const result = (quotes[fromCurrency] / quotes[toCurrency]) * value;
+
     setFromPrice(result);
     setToPrice(value);
   };
