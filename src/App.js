@@ -16,7 +16,7 @@ function App() {
     )
       .then((res) => res.json())
       .then((data) => {
-        setQuotes(data.usd);
+        setQuotes(data);
         console.log(data);
       })
       .catch((err) => {
@@ -26,18 +26,24 @@ function App() {
   }, []);
 
   const onChangeFromPrice = (value) => {
+    if (!quotes[fromCurrency] || !quotes[toCurrency]) {
+      return;
+    }
     const price = value / quotes[fromCurrency];
     const result = price * Number(quotes[toCurrency]);
 
-    setToPrice(result);
-    setFromPrice(value);
+    setToPrice(isNaN(result) ? 0 : result);
+    setFromPrice(isNaN(value) ? 0 : value);
   };
 
   const onChangeToPrice = (value) => {
+    if (!quotes[fromCurrency] || !quotes[toCurrency]) {
+      return;
+    }
     const result = (quotes[fromCurrency] / quotes[toCurrency]) * value;
 
-    setFromPrice(result);
-    setToPrice(value);
+    setFromPrice(isNaN(result) ? 0 : result);
+    setToPrice(isNaN(value) ? 0 : value);
   };
 
   return (
